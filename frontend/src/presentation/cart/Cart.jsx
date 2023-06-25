@@ -3,8 +3,13 @@ import './Cart.css'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useAppSelector } from '../../store/hooks'
 import { Buffer } from 'buffer';
+import axios from 'axios';
+import { getProductsCartFromDB } from '../../store/ducks/products/actions';
+import { useAppDispatch } from '../../store/hooks';
 
 function Cart() {
+  const dispatch = useAppDispatch()
+
   const cartProducts = useAppSelector((state) => state.products.cart)
 
   const localStorageCartProducts = JSON.parse(localStorage.getItem('cartProducts')) || [];
@@ -42,6 +47,20 @@ function Cart() {
       return [...acc, item];
     }, []);
     localStorage.setItem('cartProducts', JSON.stringify(updatedCartProducts));
+
+    const cartItemIds = localStorage.getItem('cartProducts');
+
+    if (cartItemIds) {
+      const idsArray = JSON.parse(cartItemIds);
+    
+      axios.get(`${process.env.REACT_APP_GET_PRODUCT_CART_BY_ID}`, {
+        params: { ids: idsArray },
+      }).then((data) => {
+        dispatch(getProductsCartFromDB(data.data));
+      }).catch((err) => {
+        console.log(err);
+      });
+    }
   };
 
   const handleIncreaseQuantity = (productId) => {
