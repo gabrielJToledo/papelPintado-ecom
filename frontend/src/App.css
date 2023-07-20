@@ -11,6 +11,10 @@ font-family: 'Roboto Slab', serif;
     --primary-color: #28a5de;
 }
 
+input:focus {
+    outline: none;
+  }
+
 .app {
     background-color: #f7f7f7;
     width: 100%;

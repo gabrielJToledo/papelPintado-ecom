@@ -2,10 +2,20 @@ import React from 'react'
 import './Header.css'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Link } from 'react-router-dom'
-
 import { menu, logo } from '../../Global'
+import { useAppSelector } from '../../store/hooks'
+import { useAppDispatch } from '../../store/hooks'
+import { getCurrentUserFromDB } from '../../store/ducks/user/actions'
 
 function Header() {
+  const dispatch = useAppDispatch()
+  const currentUserFromDB = useAppSelector(state => state.user.currentUserFromDB)
+
+  const handleLogout = () => {
+    localStorage.removeItem('userPayload');
+    dispatch(getCurrentUserFromDB(null))
+  };
+
   return (
     <header className="header">
       <div className="wrapper">
@@ -29,14 +39,26 @@ function Header() {
           </div>
 
           <div className="login_header_container">
-            <div className="btn_login_register">
-              <div className="login_container">
-                <Link className='login_link' to={''}> <FontAwesomeIcon icon="user-astronaut" /> Login</Link>
+            {!currentUserFromDB ? (
+              <div className="btn_login_register">
+                <div className="login_container">
+                  <Link className='login_link' to={'/login'}> <FontAwesomeIcon icon="user-astronaut" /> Login</Link>
+                </div>
+                <div className="register_container">
+                  <Link className='login_link' to={'/register'}> <FontAwesomeIcon icon="id-card" /> Cadastro</Link>
+                </div>
               </div>
-              <div className="register_container">
-                <Link className='login_link' to={''}> <FontAwesomeIcon icon="id-card" /> Cadastro</Link>
+
+            ) : (
+              <div className="btn_login_register">
+                <div className="login_container">
+                  <Link className='login_link' to={'/login'}> <FontAwesomeIcon icon="user-astronaut" /> Dados</Link>
+                </div>
+                <div className="register_container">
+                  <p className='login_link cursor-pointer m-0' onClick={handleLogout}>Sair</p>
+                </div>
               </div>
-            </div>
+            )}
 
             <Link to={`/carrinho`}><FontAwesomeIcon icon="shop" className='mx-2 text-white fa-lg' /></Link>
           </div>

@@ -39,3 +39,8 @@
     width: 20%;
 }
 
+.buy_button-cart {
+    width: 250px;
+    font-size: 1.2em;
+    padding: 5px 10px;
+}

@@ -37,7 +37,7 @@ userRouter.post('/signin', async (req: Request, res: Response) => {
     const user = { ...req.body }
 
     if (!user.name || !user.email || !user.password || !user.whatsapp) {
-        return res.status(400).json({ error: 'Os campos name, email, password e whatsapp são obrigatórios.' })
+        return res.status(400).send('Os campos name, email, password e whatsapp são obrigatórios.')
     }
 
     if (user.password !== user.confirmPassword) {
@@ -135,31 +135,28 @@ userRouter.post('/login', async (req: Request, res: Response) => {
     const { email, password } = req.body;
 
     if (!email || !password) {
-        return res.status(400).json({ error: 'Os campos email e password são obrigatórios.' });
+        return res.status(400).send('Os campos email e password são obrigatórios.');
     }
 
     try {
         const user = await userModel.findOne({ email });
 
         if (!user) {
-            return res.status(404).json({ error: 'Usuário não encontrado' });
+            return res.status(404).send('Usuário não encontrado');
         }
 
         if(!user.password) {
-            return res.status(401).json({ error: 'Credenciais inválidas!'})
+            return res.status(401).send('Credenciais inválidas!')
         }
 
         const passwordMatch = compareSync(password, user.password);
 
         if (!passwordMatch) {
-            return res.status(401).json({ error: 'Credenciais inválidas' });
+            return res.status(401).send('Credenciais inválidas');
         }
 
-        // Aqui você pode gerar um token de autenticação, por exemplo, usando JWT
-        // e enviá-lo na resposta para o cliente.
-
-        return res.status(200).json({ message: 'Login realizado com sucesso' });
+        return res.status(200).send(user);
     } catch (error) {
-        return res.status(500).json({ error: 'Erro ao fazer login' });
+        return res.status(500).send('Erro ao fazer login');
     }
 });

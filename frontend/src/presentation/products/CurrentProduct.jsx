@@ -5,11 +5,15 @@ import { Buffer } from 'buffer';
 import './CurrentProduct.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import ReactStars from 'react-stars';
+import { useReloadCartFromDB } from '../../helpers/reloadCartProducts';
+import { ToastContainer, toast } from 'react-toastify';
 
 function CurrentProduct() {
+  const reloadCartFromDB = useReloadCartFromDB()
   const { id } = useParams();
   const [product, setProduct] = useState(null);
   const [index, setIndex] = useState(0);
+  const [productQuantity, setProductQuantity] = useState(1)
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -25,6 +29,8 @@ function CurrentProduct() {
   }, [id]);
 
   const handleAddToCart = () => {
+  
+
     const cartProducts = localStorage.getItem('cartProducts');
     let cartProductsArray = [];
 
@@ -37,16 +43,26 @@ function CurrentProduct() {
 
     if (existingProduct) {
       // Produto já existe no carrinho, atualiza a quantidade
-      existingProduct.quantity++;
+      existingProduct.quantity = productQuantity;
     } else {
       // Produto não existe no carrinho, adiciona ao array
-      cartProductsArray.push({ id, quantity: 1 });
+      cartProductsArray.push({ id, quantity: productQuantity });
     }
 
     localStorage.setItem('cartProducts', JSON.stringify(cartProductsArray));
 
-    // Você pode adicionar mais lógica aqui, como exibir uma mensagem de sucesso
-    console.log(localStorage.getItem('cartProducts'));
+    toast.success('Produto adicionado no carrinho!', {
+      position: "top-center",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "light",
+    });
+    
+    reloadCartFromDB()
   };
 
   if (!product) {
@@ -68,6 +84,19 @@ function CurrentProduct() {
       return images.push(imgUrl);
     });
   }
+
+  const handleDecreaseQuantity = () => {
+    const currentQuantity = productQuantity
+    if(productQuantity !== 1) {
+      setProductQuantity(currentQuantity - 1)
+    }
+  }
+
+  const handleIncreaseQuantity = () => {
+    const currentQuantity = productQuantity
+    setProductQuantity(currentQuantity + 1)
+  }
+
 
   return (
     <div className="currentProduct">
@@ -111,9 +140,17 @@ function CurrentProduct() {
             </div>
             <div className="currentProduct_buy_button">
               <div className="currentProduct_adct_prod">
-                <FontAwesomeIcon icon="minus" className='fa-lg icon_adct' />
-                1
-                <FontAwesomeIcon icon="plus" className='fa-lg icon_adct' />
+                <FontAwesomeIcon
+                  icon="minus"
+                  className='fa-lg icon_adct'
+                  onClick={() => handleDecreaseQuantity()}
+                />
+                {productQuantity}
+                <FontAwesomeIcon
+                  icon="plus"
+                  className='fa-lg icon_adct'
+                  onClick={() => handleIncreaseQuantity()}
+                />
               </div>
               <div className="currentProduct_buy_prod">
                 <button className="buy_button">Comprar</button>
@@ -132,6 +169,9 @@ function CurrentProduct() {
           <h2>Comentários</h2>
         </div>
       </div>
+      <ToastContainer
+      
+      />
     </div>
   );
 }

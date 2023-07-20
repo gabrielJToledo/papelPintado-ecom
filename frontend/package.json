@@ -23,6 +23,7 @@
     "react-comments": "^0.0.0",
     "react-dom": "^18.2.0",
     "react-dropzone": "^14.2.3",
+    "react-input-mask": "^2.0.4",
     "react-quill": "^2.0.0",
     "react-rating": "^2.0.5",
     "react-redux": "^8.0.7",
@@ -62,6 +63,7 @@
     ]
   },
   "devDependencies": {
+    "@types/react-input-mask": "^3.0.2",
     "@types/react-slick": "^0.23.10",
     "@types/react-stars": "^2.2.1"
   }

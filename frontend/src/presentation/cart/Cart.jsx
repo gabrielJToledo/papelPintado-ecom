@@ -1,18 +1,20 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useMemo } from 'react'
 import './Cart.css'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useAppSelector } from '../../store/hooks'
 import { Buffer } from 'buffer';
-import axios from 'axios';
-import { getProductsCartFromDB } from '../../store/ducks/products/actions';
-import { useAppDispatch } from '../../store/hooks';
+import { useReloadCartFromDB } from '../../helpers/reloadCartProducts';
+
+import PaymentModal from './PaymentModal';
 
 function Cart() {
-  const dispatch = useAppDispatch()
-
   const cartProducts = useAppSelector((state) => state.products.cart)
 
-  const localStorageCartProducts = JSON.parse(localStorage.getItem('cartProducts')) || [];
+  const [showModal, setShowModal] = useState(false);
+
+  const reloadCartFromDB = useReloadCartFromDB()
+
+  const localStorageCartProducts = useMemo(() => JSON.parse(localStorage.getItem('cartProducts')) || [], []);
 
   const [productQuantities, setProductQuantities] = useState({});
 
@@ -23,7 +25,7 @@ function Cart() {
       quantities[item.id] = item.quantity;
     });
     setProductQuantities(quantities);
-  }, []);
+  }, [localStorageCartProducts]);
 
   const getProductQuantity = (productId) => {
     return productQuantities[productId] || 0;
@@ -34,6 +36,7 @@ function Cart() {
       ...productQuantities,
       [productId]: Math.max((productQuantities[productId] || 0) - 1, 0)
     };
+
     setProductQuantities(updatedQuantities);
 
     const updatedCartProducts = localStorageCartProducts.reduce((acc, item) => {
@@ -46,21 +49,12 @@ function Cart() {
       }
       return [...acc, item];
     }, []);
+
     localStorage.setItem('cartProducts', JSON.stringify(updatedCartProducts));
 
-    const cartItemIds = localStorage.getItem('cartProducts');
+    console.log(localStorageCartProducts)
 
-    if (cartItemIds) {
-      const idsArray = JSON.parse(cartItemIds);
-    
-      axios.get(`${process.env.REACT_APP_GET_PRODUCT_CART_BY_ID}`, {
-        params: { ids: idsArray },
-      }).then((data) => {
-        dispatch(getProductsCartFromDB(data.data));
-      }).catch((err) => {
-        console.log(err);
-      });
-    }
+    reloadCartFromDB()
   };
 
   const handleIncreaseQuantity = (productId) => {
@@ -92,47 +86,55 @@ function Cart() {
         <div className="division cart-division"></div>
 
         <div className="cart_products">
-          {cartProducts !== null && cartProducts.map((product) => {
-            const imageBuffer = product.coverImage.data;
-            const base64Image = Buffer.from(imageBuffer).toString('base64');
-            const imageUrl = `data:image/jpeg;base64,${base64Image}`;
+          {cartProducts && cartProducts.length > 0 ? (
+            cartProducts.map((product) => {
+              const imageBuffer = product.coverImage.data;
+              const base64Image = Buffer.from(imageBuffer).toString('base64');
+              const imageUrl = `data:image/jpeg;base64,${base64Image}`;
 
-            const quantity = getProductQuantity(product._id);
+              const quantity = getProductQuantity(product._id);
 
-            return (
-              <div className="cart_product_container" key={product._id}>
-                <div className="cart_product_img-container">
-                  <img className='cart_product_img' src={imageUrl} title={product.name} alt={product.name} />
-                </div>
+              return (
+                <div className="cart_product_container" key={product._id}>
+                  <div className="cart_product_img-container">
+                    <img className='cart_product_img' src={imageUrl} title={product.name} alt={product.name} />
+                  </div>
 
-                <div className="cart_title">
-                  <h2 className='m-0'>{product.name}</h2>
-                </div>
+                  <div className="cart_title">
+                    <h2 className='m-0'>{product.name}</h2>
+                  </div>
 
-                <div className="cart_amount">
-                  <div className="currentProduct_adct_prod">
-                    <FontAwesomeIcon
-                      icon="minus"
-                      className='fa-lg icon_adct'
-                      onClick={() => handleDecreaseQuantity(product._id)}
-                    />
-                    {quantity}
-                    <FontAwesomeIcon
-                      icon="plus"
-                      className='fa-lg icon_adct'
-                      onClick={() => handleIncreaseQuantity(product._id)}
-                    />
+                  <div className="cart_amount">
+                    <div className="currentProduct_adct_prod">
+                      <FontAwesomeIcon
+                        icon="minus"
+                        className='fa-lg icon_adct'
+                        onClick={() => handleDecreaseQuantity(product._id)}
+                      />
+                      {quantity}
+                      <FontAwesomeIcon
+                        icon="plus"
+                        className='fa-lg icon_adct'
+                        onClick={() => handleIncreaseQuantity(product._id)}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="cart_price">
+                    <p className='m-0 text-center'>R$ {product.price}</p>
                   </div>
                 </div>
+              );
+            })
+          ) : (
+            <p>Nenhum produto encontrado no carrinho.</p>
+          )}
 
-                <div className="cart_price">
-                  <p className='m-0 text-center'>R$ {product.price}</p>
-                </div>
-              </div>
-            );
-          })}
+          <PaymentModal />
+
         </div>
       </div>
+
     </div>
   );
 }
