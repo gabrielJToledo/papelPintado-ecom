@@ -37,15 +37,12 @@ function CurrentProduct() {
     if (cartProducts) {
       cartProductsArray = JSON.parse(cartProducts);
     }
-
-    // Verifica se o produto já está no carrinho
+    
     const existingProduct = cartProductsArray.find((product) => product.id === id);
 
     if (existingProduct) {
-      // Produto já existe no carrinho, atualiza a quantidade
       existingProduct.quantity = productQuantity;
     } else {
-      // Produto não existe no carrinho, adiciona ao array
       cartProductsArray.push({ id, quantity: productQuantity });
     }
 

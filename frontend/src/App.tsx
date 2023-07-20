@@ -23,6 +23,7 @@ import CurrentProduct from './presentation/products/CurrentProduct';
 import Cart from './presentation/cart/Cart';
 import Register from './presentation/register/Register';
 import Login from './presentation/login/Login';
+import MyAccount from './presentation/myAccount/MyAccount';
 
 function App() {
   const dispatch = useAppDispatch()
@@ -58,6 +59,7 @@ function App() {
         </Route>
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/minha-conta" element={<MyAccount />} />
         <Route path="*" element={<Navigate to="/home" replace={true} />} />
       </Routes>
       {!isAdminRoute && <Footer />}

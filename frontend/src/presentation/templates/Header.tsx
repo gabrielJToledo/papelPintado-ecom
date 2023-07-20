@@ -6,14 +6,17 @@ import { menu, logo } from '../../Global'
 import { useAppSelector } from '../../store/hooks'
 import { useAppDispatch } from '../../store/hooks'
 import { getCurrentUserFromDB } from '../../store/ducks/user/actions'
+import { useNavigate } from 'react-router-dom'
 
 function Header() {
+  const navigate = useNavigate()
   const dispatch = useAppDispatch()
   const currentUserFromDB = useAppSelector(state => state.user.currentUserFromDB)
 
   const handleLogout = () => {
     localStorage.removeItem('userPayload');
     dispatch(getCurrentUserFromDB(null))
+    navigate('/login')
   };
 
   return (
@@ -48,11 +51,10 @@ function Header() {
                   <Link className='login_link' to={'/register'}> <FontAwesomeIcon icon="id-card" /> Cadastro</Link>
                 </div>
               </div>
-
             ) : (
               <div className="btn_login_register">
                 <div className="login_container">
-                  <Link className='login_link' to={'/login'}> <FontAwesomeIcon icon="user-astronaut" /> Dados</Link>
+                  <Link className='login_link' to={'/minha-conta'}> Dados</Link>
                 </div>
                 <div className="register_container">
                   <p className='login_link cursor-pointer m-0' onClick={handleLogout}>Sair</p>
