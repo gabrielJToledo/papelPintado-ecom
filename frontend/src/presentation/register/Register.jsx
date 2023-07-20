@@ -3,8 +3,14 @@ import InputMask from 'react-input-mask';
 import './Register.css';
 import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
+import { useAppDispatch } from '../../store/hooks';
+import { getCurrentUserFromDB } from '../../store/ducks/user/actions';
+import { useNavigate } from 'react-router-dom';
 
 function Register() {
+    const dispatch = useAppDispatch()
+    const navigate = useNavigate()
+
     const [nomeCompleto, setNomeCompleto] = useState('');
     const [email, setEmail] = useState('');
     const [whatsapp, setWhatsapp] = useState('');
@@ -20,32 +26,58 @@ function Register() {
             whatsapp: whatsapp,
             password: password,
             confirmPassword: confirmPassword
-        })
-            .then(() => {
-                toast.success('Usuário criado!', {
-                    position: "top-center",
-                    autoClose: 5000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    theme: "light",
-                });
-
-            })
-            .catch((error) => {
-                toast.error(`${error.response.data}`, {
-                    position: "top-center",
-                    autoClose: 5000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    theme: "light",
-                });
+        }).then(() => {
+            toast.success('Usuário criado!', {
+                position: "top-center",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light",
             });
+
+            setTimeout(() => {
+                axios.post(`${process.env.REACT_APP_USER_LOGIN}`, {
+                    email: email,
+                    password: password,
+                }).then((response) => {
+                    const currentUserFromDB = response.data;
+
+                    console.log(currentUserFromDB)
+
+                    localStorage.setItem('userPayload', JSON.stringify(currentUserFromDB));
+
+                    dispatch(getCurrentUserFromDB(currentUserFromDB))
+
+                    navigate('/home')
+                }).catch((error) => {
+                    toast.error(`${error.response.data}`, {
+                        position: "top-center",
+                        autoClose: 5000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                        theme: "light",
+                    });
+                });
+            }, 1500)
+
+        }).catch((error) => {
+            toast.error(`${error.response.data}`, {
+                position: "top-center",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light",
+            });
+        });
     };
 
     return (
