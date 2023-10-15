@@ -24,6 +24,7 @@ import Cart from './presentation/cart/Cart';
 import Register from './presentation/register/Register';
 import Login from './presentation/login/Login';
 import MyAccount from './presentation/myAccount/MyAccount';
+import ProductsByCategory from './presentation/products/ProductsByCategory';
 
 function App() {
   const dispatch = useAppDispatch()
@@ -48,6 +49,7 @@ function App() {
       <Routes>
         <Route path="/home" element={<Home />} />
         <Route path="/produtos" element={<Products />} />
+        <Route path="/categoria/:id" element={<ProductsByCategory />} />
         <Route path="/carrinho" element={<Cart />} />
         <Route path="/produto/:id" element={<CurrentProduct />} />
         <Route path="/admin" element={<AdminLogin />} />

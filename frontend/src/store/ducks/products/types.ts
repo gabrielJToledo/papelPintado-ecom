@@ -1,4 +1,5 @@
 export enum productsTypes {
     getProductsFromDB = 'getProductsFromDB',
-    getProductsCartFromDB = 'getProductsCartFromDB'
+    getProductsCartFromDB = 'getProductsCartFromDB',
+    productsPage = 'productsPage'
 }

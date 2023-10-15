@@ -44,3 +44,8 @@
     font-size: 1.2em;
     padding: 5px 10px;
 }
+
+.text-right {
+    text-align: right;
+    padding-right: 50px;
+}

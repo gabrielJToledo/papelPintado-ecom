@@ -12,6 +12,7 @@ function Header() {
   const navigate = useNavigate()
   const dispatch = useAppDispatch()
   const currentUserFromDB = useAppSelector(state => state.user.currentUserFromDB)
+  const categoriesFromDB = useAppSelector(state => state.categories.categories)
 
   const handleLogout = () => {
     localStorage.removeItem('userPayload');
@@ -33,12 +34,22 @@ function Header() {
           </Link>
 
           <div className="menu_header_container">
-            {menu.map((menu) => {
-              return <div key={menu[1]} className="d-flex justify-content-center align-items-center">
-                <Link className='menu_links' to={`/${menu[0]}`}>{menu[1]}</Link>
-                <FontAwesomeIcon icon="o" className='mx-2 text-white fa-2xs' />
-              </div>
-            })}
+            <div className="d-flex justify-content-center align-items-center">
+              <Link className='menu_links' to={`/${menu[0][0]}`}>{menu[0][1]}</Link>
+              <FontAwesomeIcon icon="o" className='mx-2 text-white fa-2xs' />
+            </div>
+
+            <div className="d-flex justify-content-center align-items-center">
+              <Link className='menu_links' to={`/${menu[1][0]}`}>{menu[1][1]}
+                <ul className='prod_sub_menu'>
+                  {categoriesFromDB && categoriesFromDB.map((category: any) => {
+                    return <Link className='prod_sub_menu_links' to={`categoria/${category.name}`} key={category.name}>
+                      {category.name}
+                    </Link>
+                  })}
+                </ul>
+              </Link>
+            </div>
           </div>
 
           <div className="login_header_container">
@@ -66,13 +77,13 @@ function Header() {
           </div>
         </div>
 
-        <div className="search_header my-3">
+        {/* <div className="search_header my-3">
           <div className="search_container">
             <input className='input_search' placeholder='O que está procurando?' type="search" name="productSearch" id="productSearch" />
 
             <FontAwesomeIcon icon="search" className='mx-2 text-white search_icon' />
           </div>
-        </div>
+        </div> */}
       </div>
     </header>
   )

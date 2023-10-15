@@ -115,6 +115,7 @@ header {
 
 .menu_links {
     padding: 10px;
+    position: relative;
     color: white;
     text-decoration: none;
     font-weight: bold;
@@ -153,7 +154,7 @@ header {
     text-decoration: none;
     color: white;
     font-weight: bold;
-    transition: .5s;
+    transition: .8s;
     width: 100%;
     text-align: center;
     padding: 5px 0;
@@ -165,7 +166,7 @@ header {
 
 .login_container:hover, .register_container:hover {
     background-color: white;
-    transform: scale(0.95);
+    transform: scale(0.98);
 }
 
 .division {
@@ -177,4 +178,37 @@ header {
 
 .cursor-pointer {
     cursor: pointer;
+}
+
+.prod_sub_menu {
+    position: absolute;
+    z-index: 50;
+    top: 100%;
+    left: 0;
+    display: none;
+    flex-direction: column;
+    margin: 0;
+    padding: 0;
+    background-color: white;
+    border-bottom-left-radius: 8px;
+    border-bottom-right-radius: 8px;
+    box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
+    overflow: hidden;
+}
+
+.prod_sub_menu_links {
+    color: #3FD96D;
+    text-decoration: none;
+    font-weight: bold;
+    padding: 5px 20px;
+    transition: .3s;
+}
+
+.prod_sub_menu_links:hover {
+    background-color: #009a2e;
+    color: white;
+}
+
+.menu_links:hover  .prod_sub_menu {
+    display: flex;
 }

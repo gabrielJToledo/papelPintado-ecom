@@ -3,7 +3,8 @@ import { Reducer } from "redux";
 
 const initalState = {
     products: null,
-    cart: null
+    cart: [],
+    productsPage: 1
 }
 
 const productReducer: Reducer = (state = initalState, action) => {
@@ -12,6 +13,8 @@ const productReducer: Reducer = (state = initalState, action) => {
             return { ...state, products: action.payload }
         case productsTypes.getProductsCartFromDB:
             return { ...state, cart: action.payload }
+        case productsTypes.productsPage:
+            return { ...state, productsPage: action.payload }
         default:
             return state
     }

@@ -1,24 +1,40 @@
 import React from 'react'
-import './Products'
-import { useAppSelector } from '../../store/hooks'
+import './Products.css'
+import { useAppSelector, useAppDispatch } from '../../store/hooks'
 import { Link } from 'react-router-dom'
 import { Buffer } from 'buffer';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { productsPage } from '../../store/ducks/products/actions';
 
 function Products() {
-    const getProductsFromDB = useAppSelector((state) => state.products.products)
+    const dispatch = useAppDispatch();
+    const getProductsFromDB = useAppSelector((state) => state.products.products);
+    const currentPage = useAppSelector((state) => state.products.productsPage);
+    const totalPages = 4;
+
+    const handlePrevPage = () => {
+        if (currentPage > 1) {
+            dispatch(productsPage(currentPage - 1));
+        }
+    }
+
+    const handleNextPage = () => {
+        if (currentPage < totalPages) {
+            dispatch(productsPage(currentPage + 1));
+        }
+    }
 
     return (
         <div className="products d-flex justify-content-center">
 
             <div className="wrapper d-flex justify-content-center my-5 featuredProducts">
 
-            <div className="title_product_container">
-            <FontAwesomeIcon icon="store" className='icon_product_card fa-xl mx-2' /> <h2 className='m-0'>Papeis de Parede <span className="text-primary">Papel Pintado</span></h2>
-            </div>
+                <div className="title_product_container">
+                    <FontAwesomeIcon icon="store" className='icon_product_card fa-xl mx-2' /> <h2 className='m-0'>Papeis de Parede <span className="text-primary">Papel Pintado</span></h2>
+                </div>
 
-            <div className="division"></div>
-            
+                <div className="division"></div>
+
                 <div className="card_product_container ">
 
                     {getProductsFromDB !== null && getProductsFromDB.map((product: any) => {
@@ -38,13 +54,14 @@ function Products() {
                                 </div>
                             </Link>
                         </div>
-
                     })}
+                </div>
 
+                <div className="buttons_page d-flex justify-content-center align-items-center">
+                    <button className='page_button' onClick={handlePrevPage}>Página anterior</button>
+                    <button className='page_button' onClick={handleNextPage}>Próxima página</button>
                 </div>
             </div>
-
-
         </div>
     )
 }

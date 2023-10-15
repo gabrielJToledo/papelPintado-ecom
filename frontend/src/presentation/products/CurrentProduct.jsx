@@ -29,7 +29,7 @@ function CurrentProduct() {
   }, [id]);
 
   const handleAddToCart = () => {
-  
+
 
     const cartProducts = localStorage.getItem('cartProducts');
     let cartProductsArray = [];
@@ -37,7 +37,7 @@ function CurrentProduct() {
     if (cartProducts) {
       cartProductsArray = JSON.parse(cartProducts);
     }
-    
+
     const existingProduct = cartProductsArray.find((product) => product.id === id);
 
     if (existingProduct) {
@@ -58,7 +58,7 @@ function CurrentProduct() {
       progress: undefined,
       theme: "light",
     });
-    
+
     reloadCartFromDB()
   };
 
@@ -84,7 +84,7 @@ function CurrentProduct() {
 
   const handleDecreaseQuantity = () => {
     const currentQuantity = productQuantity
-    if(productQuantity !== 1) {
+    if (productQuantity !== 1) {
       setProductQuantity(currentQuantity - 1)
     }
   }
@@ -161,13 +161,9 @@ function CurrentProduct() {
           <h2>Descrição</h2>
           <div className="currentProduct_description" dangerouslySetInnerHTML={{ __html: product.description }} />
         </div>
-        <div className="division-soft"></div>
-        <div className="currentProduct_comments wrapper">
-          <h2>Comentários</h2>
-        </div>
       </div>
       <ToastContainer
-      
+
       />
     </div>
   );

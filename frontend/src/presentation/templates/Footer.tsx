@@ -27,17 +27,13 @@ function Footer() {
           <div className="info_logo px-5">
             <img className='logo_header' src={logo} title='Logo Papel Pintado' alt="Logo Papel Pintado" />
             <h2 className='text-white'>Papel Pintado</h2>
-           <SocialMedia/>
+            <SocialMedia />
           </div>
 
           <div className="info_links">
             <h2 className='h4 text-white text-center'>Links do site</h2>
             <Link className='info_link' to={''}>Home</Link>
-            <Link className='info_link' to={''}>Conheça a Papel Pintado</Link>
-            <Link className='info_link' to={''}>Política de Privacidade</Link>
-            <Link className='info_link' to={''}>Dúvidas Frequentes</Link>
-            <Link className='info_link' to={''}>Trocas e Devoluções</Link>
-            <Link className='info_link' to={''}>Fale Conosco</Link>
+            <Link className='info_link' to={'/produtos'}>Produtos</Link>
           </div>
 
           <div className="info_com px-5">
@@ -53,7 +49,7 @@ function Footer() {
         <h2 className='text_copyright text-white my-3'>Copyright ® Papel Pintado Lei Nº 9.610, De 19 De Fevereiro De 1998</h2>
       </div>
 
-      <WhatsappButton/>
+      <WhatsappButton />
     </footer>
   )
 }
