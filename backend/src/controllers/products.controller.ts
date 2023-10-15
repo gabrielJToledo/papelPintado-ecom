@@ -139,7 +139,7 @@ productsRouter.get('/cart', async (req, res) => {
     try {
         // Verifica se os IDs dos itens do carrinho foram fornecidos
         if (!cartItemIds) {
-            return res.status(200).json({ message: 'Nenhum produto encontrado no carrinho.' });
+            return res.status(200).json([]);
         }
 
         // Converte a string de IDs para um array de IDs
@@ -150,7 +150,7 @@ productsRouter.get('/cart', async (req, res) => {
 
         // Verifica se foram encontrados produtos
         if (products.length === 0) {
-            return res.status(200).json({ message: 'Nenhum produto encontrado no carrinho.' });
+            return res.status(200).json([]);
         }
 
         // Retorna os produtos encontrados
@@ -180,10 +180,18 @@ productsRouter.get('/:productId', async (req: Request, res: Response) => {
 });
 
 
-// Rota para obter todos os produtos
+// Rota para obter todos os produtos com paginação
 productsRouter.get('/', async (req: Request, res: Response) => {
     try {
-        const products = await productModel.find();
+        const page = parseInt(req.query.page as string) || 1; // Página atual, padrão é 1 se não for especificado
+        const itemsPerPage = parseInt(req.query.limit as string) || 2; // Número de itens por página, padrão é 10 se não for especificado
+
+        const skip = (page - 1) * itemsPerPage;
+        
+        const products = await productModel
+            .find()
+            .skip(skip)
+            .limit(itemsPerPage);
 
         return res.status(200).send(products);
     } catch (error) {
@@ -192,3 +200,20 @@ productsRouter.get('/', async (req: Request, res: Response) => {
     }
 });
 
+
+productsRouter.get('/category/:categoryName', async (req: Request, res: Response) => {
+    const categoryName = req.params.categoryName;
+
+    try {
+        const productsInCategory = await productModel.find({ category: categoryName });
+
+        if (productsInCategory.length === 0) {
+            return res.status(404).send('Nenhum produto encontrado para essa categoria.');
+        }
+
+        return res.status(200).send(productsInCategory);
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json('Produto não encontrado!');
+    }
+});

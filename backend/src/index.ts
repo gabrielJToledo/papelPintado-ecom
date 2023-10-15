@@ -2,8 +2,8 @@ import express from 'express'
 import * as dotenv from 'dotenv'
 import { connectDB } from './database/mongodb'
 import { initRoutes } from './config/routes'
-
 import cors from 'cors'
+
 const app = express()
 dotenv.config()
 
